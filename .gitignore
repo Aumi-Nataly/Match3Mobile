@@ -1,0 +1,42 @@
+# Unity-специфичные папки (никогда не коммитьте их!)
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+
+# Мета‑файлы ассетов (отслеживаются только для реальных ассетов)
+!/[Aa]ssets/**/*.meta
+
+
+# Файлы ОС
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Временные файлы редакторов
+*.swp
+*.swo
+*.tmp
+
+# Бинарные файлы (если не используете Git LFS)
+*.dll
+*.exe
+*.so
+*.dylib
+*.pdb
+
+# Локальные настройки
+.vs/
+.vscode/
+*.user
+*.userprefs
+*.zip
+*.rar
