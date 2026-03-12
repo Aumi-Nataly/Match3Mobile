@@ -14,12 +14,16 @@ public class GridSystem : MonoBehaviour
     private float CellSize = 100f;
 
     private TileSpriteManager _tileSpriteManager;
+    private Pool  _pool;
 
     [Inject]
-    public void Construct(TileSpriteManager tileSpriteManager)
+    public void Construct(TileSpriteManager tileSpriteManager, Pool pool)
     {
         _tileSpriteManager = tileSpriteManager;
-        Debug.Log($"GridSystem - TileSpriteManager{tileSpriteManager!=null}");
+        _pool = pool;
+
+        Debug.Log($"GridSystem - TileSpriteManager = {tileSpriteManager!=null}");
+        Debug.Log($"GridSystem - Pool = {pool != null}");
     }
 
     private void Start()
@@ -41,12 +45,24 @@ public class GridSystem : MonoBehaviour
 
     private void CreateTile(float x, float y)
     {
-        Tile tile = Instantiate(TilePrefab, new Vector3(x, y, 0), Quaternion.identity);
-        tile.transform.localPosition = new Vector3(x, y, 0);
-        tile.GridPos = new Vector2(x, y);
+        Tile tile = _pool.GetFromPool();
 
+
+
+        tile.transform.localPosition = new Vector3(x,y,0);
+        tile.GridPos = new Vector2(x, y);
         TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
         tile.SetType(randomType, _tileSpriteManager);
+      
+
+
+
+        //Tile tile = Instantiate(TilePrefab, new Vector3(x, y, 0), Quaternion.identity);
+        //tile.transform.localPosition = new Vector3(x, y, 0);
+        //tile.GridPos = new Vector2(x, y);
+
+        //TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
+        //tile.SetType(randomType, _tileSpriteManager);
 
     }
 }
