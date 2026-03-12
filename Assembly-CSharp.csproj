@@ -50,8 +50,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Grid\GridSystem.cs" />
+    <Compile Include="Assets\Script\Tiles\TileSpriteManager.cs" />
+    <Compile Include="Assets\Script\Scope\LevelLifetimeScope.cs" />
     <Compile Include="Assets\Script\Tiles\Tile.cs" />
+    <Compile Include="Assets\Script\Scope\GameLifetimeScope.cs" />
     <Compile Include="Assets\Script\Tiles\TileView.cs" />
+    <Compile Include="Assets\Script\Tiles\TileType.cs" />
+    <Compile Include="Assets\Script\Scope\Loader.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
