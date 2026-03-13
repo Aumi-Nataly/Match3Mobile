@@ -7,5 +7,6 @@ public class LevelLifetimeScope : LifetimeScope
     {
         builder.RegisterComponentInHierarchy<GridSystem>();
         builder.Register<IMatchFinder, MatchFinder>(Lifetime.Singleton);
+        builder.Register<IFallTile, FallTile>(Lifetime.Singleton);
     }
 }
