@@ -98,7 +98,7 @@ public class GridSystem : MonoBehaviour
             //3. Сдвинуть вниз на пустые места
             _grid = _fallTile.FallDownTile(_grid, Width, Height);
 
-            //4. СОздать новые ячейки на пустом месте
+            //4. Создать новые ячейки на пустом месте
             SpawnNewTile();
         }
     }

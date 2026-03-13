@@ -1,3 +1,4 @@
+using UnityEngine.InputSystem;
 using VContainer;
 using VContainer.Unity;
 
@@ -8,5 +9,7 @@ public class LevelLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<GridSystem>();
         builder.Register<IMatchFinder, MatchFinder>(Lifetime.Singleton);
         builder.Register<IFallTile, FallTile>(Lifetime.Singleton);
+        builder.RegisterComponentInHierarchy<InputService>();
+        builder.RegisterComponentInHierarchy<SwipeDetection>();
     }
 }

@@ -53,7 +53,9 @@
     <Compile Include="Assets\Script\Tiles\TileSpriteManager.cs" />
     <Compile Include="Assets\Script\Match\MatchFinder.cs" />
     <Compile Include="Assets\Script\Match\IFallTile.cs" />
+    <Compile Include="Assets\Script\Core\SwipeDetection.cs" />
     <Compile Include="Assets\Script\Scope\LevelLifetimeScope.cs" />
+    <Compile Include="Assets\Script\Core\InputService.cs" />
     <Compile Include="Assets\Script\Tiles\Tile.cs" />
     <Compile Include="Assets\Script\Tiles\Pool.cs" />
     <Compile Include="Assets\Script\Match\IMatchFinder.cs" />
@@ -62,6 +64,7 @@
     <Compile Include="Assets\Script\Tiles\TileType.cs" />
     <Compile Include="Assets\Script\Match\FallTile.cs" />
     <Compile Include="Assets\Script\Scope\Loader.cs" />
+    <Compile Include="Assets\Script\MobileInputAction.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
