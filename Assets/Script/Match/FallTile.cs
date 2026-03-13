@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FallTile: IFallTile
+public class FallTile : IFallTile
 {
     public Tile[,] FallDownTile(Tile[,] grid, int wight, int height)
     {

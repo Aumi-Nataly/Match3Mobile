@@ -79,25 +79,51 @@ public class GridSystem : MonoBehaviour
 
     private void ProcessMatches()
     {
-        //1. Найти комбинации
-        var foundList = _matchFinder.FindMatches(_grid, Width, Height);
-        Debug.Log("Matches found:" + foundList.Count);
-
-        //2. Удалить комбинации
-        foreach (var found in foundList)
+        while (true)
         {
-            RemoveTile(found);
-        }
 
-        //3. Сдвинуть вниз на пустые места
-        _grid = _fallTile.FallDownTile(_grid, Width, Height);
+            //1. Найти комбинации
+            var foundList = _matchFinder.FindMatches(_grid, Width, Height);
+            Debug.Log("Matches found:" + foundList.Count);
+
+            if (foundList.Count == 0)
+                break;
+
+            //2. Удалить комбинации
+            foreach (var found in foundList)
+            {
+                RemoveTile(found);
+            }
+
+            //3. Сдвинуть вниз на пустые места
+            _grid = _fallTile.FallDownTile(_grid, Width, Height);
+
+            //4. СОздать новые ячейки на пустом месте
+            SpawnNewTile();
+        }
     }
+
+
+    private void SpawnNewTile()
+    {
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                if (_grid[x, y] == null)
+                {
+                    CreateTile(x, y);
+                }
+            }
+        }
+    }
+
 
 
     private IEnumerator SeeStartGrid()
     {
         GenerateGrid();
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(1f);
         ProcessMatches();
     }
 }
