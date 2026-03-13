@@ -31,8 +31,7 @@ public class GridSystem : MonoBehaviour
     private void Start()
     {
         GenerateGrid();
-        var l = _matchFinder.FindMatches(_grid, Width, Height);
-        Debug.Log("Matches found:" + l.Count);
+        ProcessMatches();
     }
 
     private void GenerateGrid()
@@ -62,6 +61,24 @@ public class GridSystem : MonoBehaviour
         tile.SetType(randomType, _tileSpriteManager);
 
         _grid[x, y] = tile;
+    }
+
+    private void RemoveTile(Tile tile)
+    {
+        Vector2 pos = tile.GridPos;
+        _grid[(int)pos.x, (int)pos.y]=null;
+        _pool.ReturnToPool(tile);
+    }
+
+    private void ProcessMatches()
+    {
+        var foundList = _matchFinder.FindMatches(_grid, Width, Height);
+        Debug.Log("Matches found:" + foundList.Count);
+
+        foreach (var found in foundList)
+        {
+            RemoveTile(found);
+        }
     }
 }
 
