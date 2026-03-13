@@ -51,9 +51,11 @@
   <ItemGroup>
     <Compile Include="Assets\Script\Grid\GridSystem.cs" />
     <Compile Include="Assets\Script\Tiles\TileSpriteManager.cs" />
+    <Compile Include="Assets\Script\Match\MatchFinder.cs" />
     <Compile Include="Assets\Script\Scope\LevelLifetimeScope.cs" />
     <Compile Include="Assets\Script\Tiles\Tile.cs" />
     <Compile Include="Assets\Script\Tiles\Pool.cs" />
+    <Compile Include="Assets\Script\Match\IMatchFinder.cs" />
     <Compile Include="Assets\Script\Scope\GameLifetimeScope.cs" />
     <Compile Include="Assets\Script\Tiles\TileView.cs" />
     <Compile Include="Assets\Script\Tiles\TileType.cs" />

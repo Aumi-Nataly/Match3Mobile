@@ -6,5 +6,6 @@ public class LevelLifetimeScope : LifetimeScope
     protected override void Configure(IContainerBuilder builder)
     {
         builder.RegisterComponentInHierarchy<GridSystem>();
+        builder.Register<IMatchFinder, MatchFinder>(Lifetime.Singleton);
     }
 }

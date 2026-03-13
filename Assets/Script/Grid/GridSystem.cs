@@ -7,63 +7,61 @@ public class GridSystem : MonoBehaviour
     private int Width = 8;
     [SerializeField] 
     private int Height = 8;
-
     [SerializeField] 
-    private Tile TilePrefab;
-    [SerializeField] 
-    private float CellSize = 100f;
+    private float CellSize = 1f;
 
+
+    private Tile[,] _grid;
     private TileSpriteManager _tileSpriteManager;
     private Pool  _pool;
+    private IMatchFinder _matchFinder;
 
     [Inject]
-    public void Construct(TileSpriteManager tileSpriteManager, Pool pool)
+    public void Construct(TileSpriteManager tileSpriteManager, Pool pool, IMatchFinder matchFinder)
     {
         _tileSpriteManager = tileSpriteManager;
         _pool = pool;
+        _matchFinder = matchFinder;
 
         Debug.Log($"GridSystem - TileSpriteManager = {tileSpriteManager!=null}");
         Debug.Log($"GridSystem - Pool = {pool != null}");
+        Debug.Log($"GridSystem - MatchFinder = {matchFinder != null}");
     }
 
     private void Start()
     {
         GenerateGrid();
+        var l = _matchFinder.FindMatches(_grid, Width, Height);
+        Debug.Log("Matches found:" + l.Count);
     }
 
     private void GenerateGrid()
     {
+        _grid = new Tile[Width, Height];
 
         for (int x = 0; x < Width; x++)
         {
             for (int y = 0; y < Height; y++)
             {
-                CreateTile((float)x * CellSize, (float)y * CellSize);
+                CreateTile(x, y);
             }
         }
     }
 
-    private void CreateTile(float x, float y)
+    private void CreateTile(int x, int y)
     {
         Tile tile = _pool.GetFromPool();
+       
+        if (tile == null) 
+            return;
 
-
-
-        tile.transform.localPosition = new Vector3(x,y,0);
-        tile.GridPos = new Vector2(x, y);
+        tile.transform.SetParent(transform, worldPositionStays: true);
+        tile.transform.localPosition = new Vector3(x * CellSize, y * CellSize, 0);
+        tile.GridPos = new Vector2(x * CellSize, y * CellSize);
         TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
         tile.SetType(randomType, _tileSpriteManager);
-      
 
-
-
-        //Tile tile = Instantiate(TilePrefab, new Vector3(x, y, 0), Quaternion.identity);
-        //tile.transform.localPosition = new Vector3(x, y, 0);
-        //tile.GridPos = new Vector2(x, y);
-
-        //TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
-        //tile.SetType(randomType, _tileSpriteManager);
-
+        _grid[x, y] = tile;
     }
 }
 

@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 1504987830753744633, guid: a26eb3ba6d5390b46ad135666175dde5, type: 3}
+  m_Sprite: {fileID: 2431843633963688315, guid: e4b269c993173334dbefeb1330e4178a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -106,7 +106,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tile
   GridPos: {x: 4, y: 6}
-  Type: 0
+  Type: 1
 --- !u!114 &3982371900362401722
 MonoBehaviour:
   m_ObjectHideFlags: 0

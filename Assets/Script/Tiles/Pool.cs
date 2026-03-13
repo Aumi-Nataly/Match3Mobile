@@ -27,7 +27,7 @@ public class Pool : MonoBehaviour
             Tile tileObject = Instantiate(prefab);
             DontDestroyOnLoad(tileObject);
             tileObject.gameObject.SetActive(false);
-            pool.Enqueue(prefab);
+            pool.Enqueue(tileObject);
         }
 
     }
@@ -36,6 +36,7 @@ public class Pool : MonoBehaviour
     {
         var obj = pool.Dequeue();
         obj.gameObject.SetActive(true);
+        obj.transform.SetParent(null);
         SceneManager.MoveGameObjectToScene(obj.gameObject, SceneManager.GetActiveScene());
         return obj;
     }
@@ -44,6 +45,7 @@ public class Pool : MonoBehaviour
     public void ReturnToPool(Tile prefab)
     {
         prefab.gameObject.SetActive(false);
+        prefab.transform.SetParent(null);
         pool.Enqueue(prefab);
 
     }
