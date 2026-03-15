@@ -1,36 +1,40 @@
+using System.Linq;
 using UnityEngine;
 
 public class FallTile : IFallTile
 {
-    public Tile[,] FallDownTile(Tile[,] grid, int wight, int height)
+    
+    public void FallDownTile(Tile[,] grid, int wight, int height, float cellSize)
     {
-        Tile[,] res = new Tile[wight, height];
 
-        for (int x = 0; x < wight; x++)
-        {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < wight; x++)
             {
-                if (grid[x, y] == null)
+                for (int y = 0; y < height; y++)
                 {
-                    for (int a = y + 1; a < height; a++)
+                    if (grid[x, y] == null)
                     {
-                        if (grid[x, a] != null)
+                        for (int a = y + 1; a < height; a++)
                         {
-                            Tile t = grid[x, a];
-                            grid[x, y] = t;
-                            grid[x, a] = null;
+                            if (grid[x, a] != null)
+                            {
+                                Tile t = grid[x, a];
+                                grid[x, y] = t;
+                                grid[x, a] = null;
 
-                            t.transform.localPosition = new Vector3(x, y, 0);
-                            t.GridPos = new Vector2(x, y);
-                            break;
+                                t.transform.localPosition = new Vector3(x * cellSize, y * cellSize, 0);
+                    
+                                break;
+                            }
                         }
                     }
                 }
-
-                res[x, y] = grid[x, y];
             }
-        }
 
-        return res;
+    }
+
+
+    public bool HasEmptyTileLinq(Tile[,] grid)
+    {
+        return grid.Cast<Tile>().Any(tile => tile == null);
     }
 }

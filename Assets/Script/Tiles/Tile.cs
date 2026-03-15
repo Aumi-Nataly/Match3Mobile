@@ -3,9 +3,8 @@ using VContainer;
 
 public class Tile : MonoBehaviour
 {
-    public Vector2 GridPos;
     public TileType Type;
-    private SpriteRenderer spriteRenderer;
+    public SpriteRenderer spriteRenderer;
 
     private void Awake()
     {
