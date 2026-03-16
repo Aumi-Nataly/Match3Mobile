@@ -167,6 +167,7 @@ MonoBehaviour:
   Width: 5
   Height: 7
   CellSize: 1
+  HeightSpawnNew: 1
 --- !u!114 &330513516
 MonoBehaviour:
   m_ObjectHideFlags: 0

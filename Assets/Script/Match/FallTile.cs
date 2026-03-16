@@ -21,7 +21,7 @@ public class FallTile : IFallTile
                                 grid[x, y] = t;
                                 grid[x, a] = null;
 
-                                t.transform.localPosition = new Vector3(x * cellSize, y * cellSize, 0);
+                                t.MoveTo(new Vector3(x * cellSize, y * cellSize, 0));
                     
                                 break;
                             }

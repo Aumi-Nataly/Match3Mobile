@@ -11,6 +11,8 @@ public class GridSystem : MonoBehaviour
     private int Height = 8;
     [SerializeField]
     private float CellSize = 1f;
+    [SerializeField]
+    private int HeightSpawnNew = 2;
 
 
     private Tile[,] _grid;
@@ -45,9 +47,6 @@ public class GridSystem : MonoBehaviour
     private void Start()
     {
         _swipeDetection.OnSwipe += HandleSwipe;
-        //GenerateGrid();
-        //ProcessMatches();
-
         StartCoroutine(SeeStartGrid());
     }
 
@@ -130,7 +129,7 @@ public class GridSystem : MonoBehaviour
             {
                 if (_grid[x, y] == null)
                 {
-                    CreateTile(x, y);
+                    SpawnTileFromTop(x,y);
                 }
             }
         }
@@ -181,10 +180,26 @@ public class GridSystem : MonoBehaviour
         _grid[posA.x, posA.y] = b;
         _grid[posB.x, posB.y] = a;
 
-        a.transform.localPosition = new Vector3(posB.x * CellSize, posB.y * CellSize, 0);
-        b.transform.localPosition = new Vector3(posA.x * CellSize, posA.y * CellSize, 0);
+        a.MoveTo(new Vector3(posB.x * CellSize, posB.y * CellSize, 0));
+        b.MoveTo(new Vector3(posA.x * CellSize, posA.y * CellSize, 0));
     }
 
+    private void SpawnTileFromTop(int x, int y)
+    {
+        Tile tile = _pool.GetFromPool();
+
+        if (tile == null)
+            return;
+
+        tile.transform.SetParent(transform, worldPositionStays: true);
+        tile.transform.localPosition = new Vector3(x * CellSize, (y * CellSize) + HeightSpawnNew, 0);
+
+        TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
+        tile.SetType(randomType, _tileSpriteManager);
+
+        _grid[x, y] = tile;
+        tile.MoveTo(new Vector3(x * CellSize, y * CellSize, 0));
+    }
 
     private void LogGridState(string message)
     {

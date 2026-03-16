@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using VContainer;
 
@@ -30,5 +31,10 @@ public class Tile : MonoBehaviour
         Type = newType;
         Sprite newSprite = _tileSpriteManager.GetSprite(Type);
         spriteRenderer.sprite = newSprite;
+    }
+
+    public void MoveTo(Vector3 tatgetPos, float duration = 1f)
+    {
+        transform.DOLocalMove(tatgetPos, duration).SetEase(Ease.OutBounce);
     }
 }
