@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using VContainer;
@@ -80,15 +81,18 @@ public class GridSystem : MonoBehaviour
 
     }
 
-    private void RemoveTile(Tile tile)
+    private void RemoveTile(List<Tile> tiles)
     {
-        Vector2Int pos = FindTilePosition(tile);
+        foreach (Tile tile in tiles)
+        {
+            Vector2Int pos = FindTilePosition(tile);
 
-        if (pos.x < 0)
-            return;
+            if (pos.x < 0)
+                return;
 
-        _grid[pos.x, pos.y] = null;
-        _pool.ReturnToPool(tile);
+            _grid[pos.x, pos.y] = null;
+            _pool.ReturnToPool(tile);
+        }
     }
 
     private void ProcessMatches()
@@ -106,7 +110,7 @@ public class GridSystem : MonoBehaviour
             //2. Удалить комбинации
             foreach (var found in foundList)
             {
-                RemoveTile(found);
+                RemoveTile(found.ListTile);
             }
 
             //3. Сдвинуть вниз на пустые места
