@@ -106,23 +106,25 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-   
     private IEnumerator ProcessMatches(bool startingCombination)
     {
         int step = 0;
 
-        while (_matchFinder.FindMatches(_grid, Width, Height).Count>0 && step < 100)
+        while (step < 100) // Защита от бесконечного цикла
         {
-
-            //1. Найти комбинации
+            // 1. Найти комбинации
             var foundList = _matchFinder.FindMatches(_grid, Width, Height);
-            Debug.Log($"На старте найденно комбинаций {foundList.Count}");
 
-
+            // Если комбинаций нет — завершаем обработку
             if (foundList.Count == 0)
+            {
+                Debug.Log($"Обработка завершена на шаге {step}. Больше комбинаций нет.");
                 break;
+            }
 
-            //2. Удалить комбинации
+            Debug.Log($"Шаг {step}: найдено комбинаций {foundList.Count}");
+
+            // 2. Удалить комбинации
             foreach (var found in foundList)
             {
                 RemoveTile(found.ListTile);
@@ -133,19 +135,25 @@ public class GridSystem : MonoBehaviour
 
             yield return new WaitForSeconds(0.3f);
 
-            //3. Сдвинуть вниз на пустые места
+            // 3. Сдвинуть вниз на пустые места
             _fallTile.FallDownTile(_grid, Width, Height, CellSize);
 
+            // Ждём завершения анимации падения
             yield return new WaitForSeconds(0.5f);
 
-            //4. Создать новые ячейки на пустом месте
+            // 4. Создать новые ячейки на пустом месте
             SpawnNewTile();
-            yield return new WaitForSeconds(0.5f);
+
+            // Ждём завершения анимации создания новых тайлов
+            yield return new WaitForSeconds(2f);
+
             step++;
+
         }
 
-        Debug.Log($"На старте шагов {step}");
+        Debug.Log($"Всего выполнено шагов: {step}");
     }
+
 
    /// <summary>
    /// Запуск корутин генерации ячеек на все столбцы
@@ -178,6 +186,7 @@ public class GridSystem : MonoBehaviour
     {
         GenerateGrid();
         StartCoroutine(ProcessMatches(StartingCombination));
+      //  StartCoroutine(ProcessMatches(StartingCombination));
         StartingCombination = false;
     }
 
