@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 public class MatchFinder : IMatchFinder
@@ -7,127 +8,94 @@ public class MatchFinder : IMatchFinder
     {
         List<MatchModel> matchModels = new List<MatchModel>();
 
-        // 1. Ищем стандартные горизонтальные и вертикальные совпадения
         FindHorizontal(grid, width, height, matchModels);
         FindVertical(grid, width, height, matchModels);
-
-        // 2. Ищем L‑образные и T‑образные формы
-        FindLShape(grid, width, height, matchModels);
-
-        // 3. Удаляем дубликаты (один тайл — только в одном совпадении)
-        RemoveDuplicateMatches(matchModels);
+        FindComplexMatches(grid, width, height, matchModels);
 
         return matchModels;
     }
 
-    private void RemoveDuplicateMatches(List<MatchModel> matches)
-    {
-        HashSet<Tile> usedTiles = new HashSet<Tile>();
-        matches.RemoveAll(match =>
-        {
-            bool hasDuplicate = match.ListTile.Any(tile => usedTiles.Contains(tile));
-            if (!hasDuplicate)
-            {
-                foreach (var tile in match.ListTile)
-                {
-                    usedTiles.Add(tile);
-                }
-            }
-            return hasDuplicate;
-        });
-    }
-
-
-    private void FindLShape(Tile[,] grid, int width, int height, List<MatchModel> matchModels)
+    private void FindComplexMatches(Tile[,] grid, int width, int height, List<MatchModel> matchModels)
     {
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                Tile current = grid[x, y];
-                if (current == null) continue;
+                Tile center = grid[x, y];
+                if (center == null) continue;
 
-                // направо + вверх
-                if (x + 2 < width && y + 2 < height)
-                {
-                    if (IsSame(grid, x, y, x + 1, y, current) &&
-                        IsSame(grid, x, y, x + 2, y, current) &&
-                        IsSame(grid, x, y, x, y + 1, current) &&
-                        IsSame(grid, x, y, x, y + 2, current))
-                    {
-                        // AddLMatch(grid, x, y, matchModels);
-                        AddLMatch(grid, x, y,1, 0,0,1, matchModels);
-                    }
-                }
+                int left = CountDirection(grid, x, y, -1, 0, width, height, center.Type);
+                int right = CountDirection(grid, x, y, 1, 0, width, height, center.Type);
+                int up = CountDirection(grid, x, y, 0, 1, width, height, center.Type);
+                int down = CountDirection(grid, x, y, 0, -1, width, height, center.Type);
 
-                //  направо + вниз
-                if (x + 2 < width && y - 2 >= 0)
-                {
-                    if (IsSame(grid, x, y, x + 1, y, current) &&
-                        IsSame(grid, x, y, x + 2, y, current) &&
-                        IsSame(grid, x, y, x, y - 1, current) &&
-                        IsSame(grid, x, y, x, y - 2, current))
-                    {
-                        AddLMatch(grid, x, y, 1, 0, 0, -1, matchModels);
-                    }
-                }
+                bool horizontal = left + right >= 2;
+                bool vertical = up + down >= 2;
 
-                //  налево + вверх
-                if (x - 2 >= 0 && y + 2 < height)
-                {
-                    if (IsSame(grid, x, y, x - 1, y, current) &&
-                        IsSame(grid, x, y, x - 2, y, current) &&
-                        IsSame(grid, x, y, x, y + 1, current) &&
-                        IsSame(grid, x, y, x, y + 2, current))
-                    {
-                        AddLMatch(grid, x, y, -1, 0, 0, 1, matchModels);
-                    }
-                }
+                if (!(horizontal && vertical)) //данные линии обрабатываются в FindHorizontal и FindVertical
+                    continue;
 
-                //  налево + вниз
-                if (x - 2 >= 0 && y - 2 >= 0)
+                MatchType type;
+                int directions = 0;
+
+                if (left > 0) directions++;
+                if (right > 0) directions++;
+                if (up > 0) directions++;
+                if (down > 0) directions++;
+
+                if (directions >= 3)
+                    type = MatchType.TForm;
+                else if (horizontal && vertical)
+                    type = MatchType.LForm;
+                else
+                    continue; // это обычная линия
+
+                var tiles = new List<Tile> { center };
+
+                AddDirectionTiles(grid, tiles, x, y, -1, 0, left);
+                AddDirectionTiles(grid, tiles, x, y, 1, 0, right);
+                AddDirectionTiles(grid, tiles, x, y, 0, 1, up);
+                AddDirectionTiles(grid, tiles, x, y, 0, -1, down);
+
+                matchModels.Add(new MatchModel
                 {
-                    if (IsSame(grid, x, y, x - 1, y, current) &&
-                        IsSame(grid, x, y, x - 2, y, current) &&
-                        IsSame(grid, x, y, x, y - 1, current) &&
-                        IsSame(grid, x, y, x, y - 2, current))
-                    {
-                        AddLMatch(grid, x, y, -1, 0, 0, -1, matchModels);
-                    }
-                }
+                    ListTile = tiles,
+                    MatchType = type
+                });
             }
         }
     }
 
-    private bool IsSame(Tile[,] grid, int x1, int y1, int x2, int y2, Tile center)
+    private int CountDirection(Tile[,] grid, int startX,int startY,int dx,int dy,int width,
+        int height,TileType type)
     {
-        Tile t = grid[x2, y2];
-        return t != null && t.Type == center.Type;
-    }
-    private void AddLMatch(
-     Tile[,] grid,
-     int x,
-     int y,
-     int dx1, int dy1, // горизонталь
-     int dx2, int dy2, // вертикаль
-     List<MatchModel> matchModels)
-    {
-        var tiles = new List<Tile>
-    {
-        grid[x, y],
-        grid[x + dx1, y + dy1],
-        grid[x + dx1 * 2, y + dy1 * 2],
-        grid[x + dx2, y + dy2],
-        grid[x + dx2 * 2, y + dy2 * 2]
-    };
+        int count = 0;
 
-        matchModels.Add(new MatchModel
+        int x = startX + dx;
+        int y = startY + dy;
+
+        while (x >= 0 && x < width && y >= 0 && y < height)
         {
-            ListTile = tiles,
-            MatchType = MatchType.LForm
-        });
+            Tile t = grid[x, y];
+            if (t == null || t.Type != type)
+                break;
+
+            count++;
+            x += dx;
+            y += dy;
+        }
+
+        return count;
     }
 
+    private void AddDirectionTiles(Tile[,] grid,List<Tile> tiles,int startX, int startY,
+        int dx,int dy,int count)
+    {
+        for (int i = 1; i <= count; i++)
+        {
+            tiles.Add(grid[startX + dx * i, startY + dy * i]);
+        }
+    }
 
 
     private void FindHorizontal(Tile[,] grid, int width, int height, List<MatchModel> matchModels)
@@ -207,18 +175,15 @@ public class MatchFinder : IMatchFinder
             MatchType matchType = match.Count switch
             {
                 3 => MatchType.Three,
-                4 => MatchType.Four,
-                5 => MatchType.Five
-
+                4 => MatchType.Four
             };
 
             matchModels.Add(new MatchModel { ListTile = new List<Tile>(match), MatchType = matchType });
         }
+
+        if (match.Count >= 5)
+            matchModels.Add(new MatchModel { ListTile = new List<Tile>(match), MatchType = MatchType.Five });
     }
 
-    private void AddMatchComplexForm(List<Tile> match, List<MatchModel> matchModels, MatchType matchType)
-    {
-        matchModels.Add(new MatchModel { ListTile = new List<Tile>(match), MatchType = matchType });
-    }
 
 }
