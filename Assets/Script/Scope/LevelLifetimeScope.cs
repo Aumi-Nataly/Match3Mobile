@@ -11,5 +11,6 @@ public class LevelLifetimeScope : LifetimeScope
         builder.Register<IFallTile, FallTile>(Lifetime.Singleton);
         builder.RegisterComponentInHierarchy<InputService>();
         builder.RegisterComponentInHierarchy<SwipeDetection>();
+        builder.RegisterComponentInHierarchy<ScoreSystem>();
     }
 }

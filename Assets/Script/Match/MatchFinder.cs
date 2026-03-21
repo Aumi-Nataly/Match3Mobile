@@ -170,6 +170,12 @@ public class MatchFinder : IMatchFinder
 
     private void CheckAndAddMatch(List<Tile> match, List<MatchModel> matchModels)
     {
+        if (match.Count >= 5)
+        {
+            matchModels.Add(new MatchModel { ListTile = new List<Tile>(match), MatchType = MatchType.Five });
+            return;
+        }
+
         if (match.Count >= 3)
         {
             MatchType matchType = match.Count switch
@@ -181,8 +187,6 @@ public class MatchFinder : IMatchFinder
             matchModels.Add(new MatchModel { ListTile = new List<Tile>(match), MatchType = matchType });
         }
 
-        if (match.Count >= 5)
-            matchModels.Add(new MatchModel { ListTile = new List<Tile>(match), MatchType = MatchType.Five });
     }
 
 

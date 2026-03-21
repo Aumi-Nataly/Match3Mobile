@@ -1,12 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
 using VContainer;
-using static UnityEngine.Rendering.DebugUI.Table;
-
 public class GridSystem : MonoBehaviour
 {
 
@@ -24,6 +20,9 @@ public class GridSystem : MonoBehaviour
     private IMatchFinder _matchFinder;
     private IFallTile _fallTile;
     private SwipeDetection _swipeDetection;
+
+    public event Action<MatchType> OnScoreAdded;
+    private bool StartingCombination = true;
 
     [Inject]
     public void Construct(TileSpriteManager tileSpriteManager, Pool pool,
@@ -49,11 +48,10 @@ public class GridSystem : MonoBehaviour
 
     private void Start()
     {
-        Width = 8;//Random.Range(4, 9);
+        Width = UnityEngine.Random.Range(4, 8);
 
          SetupCamera();
         _swipeDetection.OnSwipe += HandleSwipe;
-        // StartCoroutine(SeeStartGrid());       
         SeeStartGrid();
     }
 
@@ -80,7 +78,7 @@ public class GridSystem : MonoBehaviour
         tile.transform.SetParent(transform);
         tile.transform.localPosition = GetWorldPosition(x, y);
 
-        TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
+        TileType randomType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
         tile.SetType(randomType, _tileSpriteManager);
 
         _grid[x, y] = tile;
@@ -109,14 +107,17 @@ public class GridSystem : MonoBehaviour
     }
 
    
-    private IEnumerator ProcessMatches()
+    private IEnumerator ProcessMatches(bool startingCombination)
     {
         int step = 0;
-        while (true && step < 100)
+
+        while (_matchFinder.FindMatches(_grid, Width, Height).Count>0 && step < 100)
         {
 
             //1. Найти комбинации
             var foundList = _matchFinder.FindMatches(_grid, Width, Height);
+            Debug.Log($"На старте найденно комбинаций {foundList.Count}");
+
 
             if (foundList.Count == 0)
                 break;
@@ -125,6 +126,9 @@ public class GridSystem : MonoBehaviour
             foreach (var found in foundList)
             {
                 RemoveTile(found.ListTile);
+
+                if (!startingCombination)
+                    OnScoreAdded?.Invoke(found.MatchType);
             }
 
             yield return new WaitForSeconds(0.3f);
@@ -139,6 +143,8 @@ public class GridSystem : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             step++;
         }
+
+        Debug.Log($"На старте шагов {step}");
     }
 
    /// <summary>
@@ -168,17 +174,11 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-    //private IEnumerator SeeStartGrid()
-    //{
-    //    GenerateGrid();
-    //    yield return new WaitForSeconds(1f);
-    //    ProcessMatches();
-    //}
-
     private void SeeStartGrid()
     {
-        GenerateGrid(); 
-        StartCoroutine(ProcessMatches());
+        GenerateGrid();
+        StartCoroutine(ProcessMatches(StartingCombination));
+        StartingCombination = false;
     }
 
     private void HandleSwipe(SwipeModel swipeModel)
@@ -196,8 +196,7 @@ public class GridSystem : MonoBehaviour
 
         if (foundList.Count > 0)
         {
-             //ProcessMatches();
-            StartCoroutine(ProcessMatches());
+            StartCoroutine(ProcessMatches(StartingCombination));
         }
         else
         {
@@ -234,7 +233,7 @@ public class GridSystem : MonoBehaviour
         tile.transform.SetParent(transform, worldPositionStays: true);
         tile.transform.localPosition = GetWorldPosition(x, Height);
 
-        TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
+        TileType randomType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
         tile.SetType(randomType, _tileSpriteManager);
     
         tile.MoveTo(GetWorldPosition(x, y));
