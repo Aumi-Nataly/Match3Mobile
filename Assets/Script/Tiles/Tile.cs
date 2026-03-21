@@ -33,8 +33,8 @@ public class Tile : MonoBehaviour
         spriteRenderer.sprite = newSprite;
     }
 
-    public void MoveTo(Vector3 tatgetPos, float duration = 1f)
+    public void MoveTo(Vector3 tatgetPos, float duration = 0.5f)
     {
-        transform.DOLocalMove(tatgetPos, duration).SetEase(Ease.OutBounce);
+        transform.DOLocalMove(tatgetPos, duration).SetEase(Ease.Linear/*Ease.OutBounce*/);
     }
 }

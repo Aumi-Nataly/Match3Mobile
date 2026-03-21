@@ -106,8 +106,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e470e2209dbd1e6499432ebb9d7910e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tile
-  GridPos: {x: 4, y: 6}
   Type: 1
+  spriteRenderer: {fileID: 0}
 --- !u!114 &3982371900362401722
 MonoBehaviour:
   m_ObjectHideFlags: 0

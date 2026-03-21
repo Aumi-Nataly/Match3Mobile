@@ -21,9 +21,11 @@ public class FallTile : IFallTile
                                 grid[x, y] = t;
                                 grid[x, a] = null;
 
-                                t.MoveTo(new Vector3(x * cellSize, y * cellSize, 0));
-                    
-                                break;
+                             t.MoveTo(GetWorldPosition(wight, height, x, y, cellSize));
+                           // t.transform.localPosition = GetWorldPosition(wight, height, x, y, cellSize);
+
+                            break;
+
                             }
                         }
                     }
@@ -32,6 +34,13 @@ public class FallTile : IFallTile
 
     }
 
+    private Vector3 GetWorldPosition(int wight, int height, int x, int y, float cellSize)
+    {
+        float offsetX = (wight - 1) / 2f;
+        float offsetY = (height - 1) / 2f;
+
+        return new Vector3((x - offsetX) * cellSize, (y - offsetY) * cellSize, 0);
+    }
 
     public bool HasEmptyTileLinq(Tile[,] grid)
     {

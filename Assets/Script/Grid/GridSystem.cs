@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
+using UnityEngine.UIElements;
 using VContainer;
+using static UnityEngine.Rendering.DebugUI.Table;
 
 public class GridSystem : MonoBehaviour
 {
-    [SerializeField]
-    private int Width = 8;
-    [SerializeField]
-    private int Height = 8;
-    [SerializeField]
-    private float CellSize = 1f;
+
     [SerializeField]
     private int HeightSpawnNew = 2;
 
+    private float CellSize = 1f;
 
+    private int Width = 8;
+    private int Height = 8;
     private Tile[,] _grid;
+
     private TileSpriteManager _tileSpriteManager;
     private Pool _pool;
     private IMatchFinder _matchFinder;
@@ -47,8 +49,12 @@ public class GridSystem : MonoBehaviour
 
     private void Start()
     {
+        Width = 8;//Random.Range(4, 9);
+
+         SetupCamera();
         _swipeDetection.OnSwipe += HandleSwipe;
-        StartCoroutine(SeeStartGrid());
+        // StartCoroutine(SeeStartGrid());       
+        SeeStartGrid();
     }
 
     private void GenerateGrid()
@@ -71,14 +77,21 @@ public class GridSystem : MonoBehaviour
         if (tile == null)
             return;
 
-        tile.transform.SetParent(transform, worldPositionStays: true);
-        tile.transform.localPosition = new Vector3(x * CellSize, y * CellSize, 0);
+        tile.transform.SetParent(transform);
+        tile.transform.localPosition = GetWorldPosition(x, y);
 
         TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
         tile.SetType(randomType, _tileSpriteManager);
 
         _grid[x, y] = tile;
+    }
 
+    private Vector3 GetWorldPosition(int x, int y)
+    {
+        float offsetX = (Width - 1) / 2f;
+        float offsetY = (Height - 1) / 2f;
+
+        return new Vector3((x - offsetX) * CellSize, (y - offsetY) * CellSize, 0);
     }
 
     private void RemoveTile(List<Tile> tiles)
@@ -95,10 +108,11 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-    private void ProcessMatches()
+   
+    private IEnumerator ProcessMatches()
     {
         int step = 0;
-        while (true && step < 20)
+        while (true && step < 100)
         {
 
             //1. Найти комбинации
@@ -113,37 +127,58 @@ public class GridSystem : MonoBehaviour
                 RemoveTile(found.ListTile);
             }
 
+            yield return new WaitForSeconds(0.3f);
+
             //3. Сдвинуть вниз на пустые места
             _fallTile.FallDownTile(_grid, Width, Height, CellSize);
 
+            yield return new WaitForSeconds(0.5f);
+
             //4. Создать новые ячейки на пустом месте
             SpawnNewTile();
-
+            yield return new WaitForSeconds(0.5f);
             step++;
-            Debug.Log("step = " + step);
         }
     }
 
-
+   /// <summary>
+   /// Запуск корутин генерации ячеек на все столбцы
+   /// </summary>
     private void SpawnNewTile()
     {
         for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < Height; y++)
-            {
-                if (_grid[x, y] == null)
-                {
-                    SpawnTileFromTop(x,y);
-                }
+            StartCoroutine(SpawnColumnSequentially(x));
+        }
+    }
+
+    /// <summary>
+    /// Генерация ячеек по очереди и их перемещение вниз
+    /// </summary>
+    /// <param name="x"></param>
+    /// <returns></returns>
+    private IEnumerator SpawnColumnSequentially(int x)
+    {
+        for (int y = 0; y < Height; y++)
+        {
+            if (_grid[x, y] == null)
+            {      
+                yield return StartCoroutine(SpawnTileFromTop(x, y));
             }
         }
     }
 
-    private IEnumerator SeeStartGrid()
+    //private IEnumerator SeeStartGrid()
+    //{
+    //    GenerateGrid();
+    //    yield return new WaitForSeconds(1f);
+    //    ProcessMatches();
+    //}
+
+    private void SeeStartGrid()
     {
-        GenerateGrid();
-        yield return new WaitForSeconds(1f);
-        ProcessMatches();
+        GenerateGrid(); 
+        StartCoroutine(ProcessMatches());
     }
 
     private void HandleSwipe(SwipeModel swipeModel)
@@ -161,14 +196,14 @@ public class GridSystem : MonoBehaviour
 
         if (foundList.Count > 0)
         {
-            ProcessMatches();
+             //ProcessMatches();
+            StartCoroutine(ProcessMatches());
         }
         else
         {
             // Нет совпадения — вернуть обратно
             SwapTiles(swipeModel.Tile, other);
         }
-
     }
 
     private bool IsInsideGrid(Vector2 pos)
@@ -184,41 +219,29 @@ public class GridSystem : MonoBehaviour
         _grid[posA.x, posA.y] = b;
         _grid[posB.x, posB.y] = a;
 
-        a.MoveTo(new Vector3(posB.x * CellSize, posB.y * CellSize, 0));
-        b.MoveTo(new Vector3(posA.x * CellSize, posA.y * CellSize, 0));
+        a.MoveTo(GetWorldPosition(posB.x, posB.y));
+        b.MoveTo(GetWorldPosition(posA.x, posA.y));
+
     }
 
-    private void SpawnTileFromTop(int x, int y)
+    private IEnumerator SpawnTileFromTop(int x, int y)
     {
         Tile tile = _pool.GetFromPool();
 
         if (tile == null)
-            return;
+            yield return new WaitForSeconds(0.1f); 
 
         tile.transform.SetParent(transform, worldPositionStays: true);
-        tile.transform.localPosition = new Vector3(x * CellSize, (y * CellSize) + HeightSpawnNew, 0);
+        tile.transform.localPosition = GetWorldPosition(x, Height);
 
         TileType randomType = (TileType)Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
         tile.SetType(randomType, _tileSpriteManager);
+    
+        tile.MoveTo(GetWorldPosition(x, y));
+         _grid[x, y] = tile;
 
-        _grid[x, y] = tile;
-        tile.MoveTo(new Vector3(x * CellSize, y * CellSize, 0));
+        yield return new WaitForSeconds(0.8f);
     }
-
-    private void LogGridState(string message)
-    {
-        Debug.Log(message);
-        for (int y = Height - 1; y >= 0; y--) // Сверху вниз для удобства чтения
-        {
-            string row = "";
-            for (int x = 0; x < Width; x++)
-            {
-                row += (_grid[x, y] == null ? "□ " : "■ ");
-            }
-            Debug.Log($"Row {y}: {row}");
-        }
-    }
-
 
     private Vector2Int FindTilePosition(Tile tile)
     {
@@ -237,5 +260,26 @@ public class GridSystem : MonoBehaviour
         return new Vector2Int(-1, -1);
     }
 
+
+    private void SetupCamera()
+    {
+        //1. От ширины столбцов расчитать размер камеры
+        float gridWidth = Width * CellSize;
+        float aspect = (float)Screen.width / Screen.height;
+
+        Camera.main.orthographicSize = gridWidth / (2f * aspect);
+        Canvas.ForceUpdateCanvases();
+
+        //2. Расчитать колво рядов
+        float cameraHeight = Camera.main.orthographicSize * 2f;
+        float UiPercent = 80f;
+        float availableHeight = cameraHeight * UiPercent / 100;
+       
+        Height = Mathf.FloorToInt(availableHeight / CellSize);
+        Debug.Log($"SetupCamera Height ={Height}");
+
+    }
+ 
+  
 }
 
