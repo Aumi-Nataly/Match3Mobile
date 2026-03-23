@@ -69,6 +69,11 @@ public class GridSystem : MonoBehaviour
         }
     }
 
+    public Dictionary<TileType, Sprite> GetDictionarySprite()
+    {
+        return _tileSpriteManager.GetDictionaryType();
+    }
+
     private void CreateTile(int x, int y)
     {
         Tile tile = _pool.GetFromPool();

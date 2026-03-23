@@ -27,4 +27,8 @@ public class TileSpriteManager : MonoBehaviour
         }
         return null;
     }
+
+    public Dictionary<TileType, Sprite> GetDictionaryType()
+        => spriteCache;
+    
 }

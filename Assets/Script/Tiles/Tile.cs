@@ -20,8 +20,6 @@ public class Tile : MonoBehaviour
         if (spriteRenderer == null)
         {
             spriteRenderer = gameObject.AddComponent<SpriteRenderer>();
-
-            Debug.Log($"Компонент SpriteRenderer добавлен на {gameObject.name}");
         }
     }
 

@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using VContainer;
 
 public class GameOverSystem : MonoBehaviour
@@ -10,6 +11,9 @@ public class GameOverSystem : MonoBehaviour
 
     [SerializeField]
     private TMP_Text txtTaskValue;
+
+    [SerializeField]
+    private Image imgTaskIcon;
 
     [SerializeField]
     private GameObject GameOverPanel;
@@ -31,6 +35,13 @@ public class GameOverSystem : MonoBehaviour
         var desc = _detectGame.Description();
         txtTaskName.text = desc.TaskName;
         txtTaskValue.text = desc.TaskValue;
+        imgTaskIcon.sprite = desc.TaskSprite;
+
+        if (desc.TaskSprite != null) 
+        {
+
+            imgTaskIcon.color = new Color(1f, 1f, 1f, 1f);
+        }
     }
     private void OnDestroy()
     {
@@ -41,7 +52,8 @@ public class GameOverSystem : MonoBehaviour
     {
         //  GameOverType randomType = (GameOverType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(GameOverType)).Length);
 
-        GameOverType randomType = GameOverType.MaxCount;
+        GameOverType randomType = GameOverType.GetColor;
+
 
         switch (randomType)
         {
@@ -49,7 +61,7 @@ public class GameOverSystem : MonoBehaviour
                 _detectGame = new MaxCountService(_gridSystem);
                 break;
             case GameOverType.GetColor:
-                _detectGame = new GetColorService();
+                _detectGame = new GetColorService(_gridSystem);
                 break;
         }
 
