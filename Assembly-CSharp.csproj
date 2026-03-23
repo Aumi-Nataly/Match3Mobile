@@ -53,8 +53,10 @@
     <Compile Include="Assets\Script\Tiles\TileSpriteManager.cs" />
     <Compile Include="Assets\Script\Match\MatchFinder.cs" />
     <Compile Include="Assets\Script\Swipe\SwipeModel.cs" />
+    <Compile Include="Assets\Script\Score\GetColorService.cs" />
     <Compile Include="Assets\Script\Match\IFallTile.cs" />
     <Compile Include="Assets\Script\Score\ScoreSystem.cs" />
+    <Compile Include="Assets\Script\Score\GameOverType.cs" />
     <Compile Include="Assets\Script\Swipe\InputService.cs" />
     <Compile Include="Assets\Script\Scope\LevelLifetimeScope.cs" />
     <Compile Include="Assets\Script\Match\MatchModel.cs" />
@@ -62,13 +64,17 @@
     <Compile Include="Assets\Script\Tiles\Pool.cs" />
     <Compile Include="Assets\Script\Swipe\SwipeDetection.cs" />
     <Compile Include="Assets\Script\Swipe\MobileInputAction.cs" />
+    <Compile Include="Assets\Script\Score\TaskModel.cs" />
     <Compile Include="Assets\Script\Match\IMatchFinder.cs" />
     <Compile Include="Assets\Script\Scope\GameLifetimeScope.cs" />
     <Compile Include="Assets\Script\Tiles\TileView.cs" />
     <Compile Include="Assets\Script\Tiles\TileType.cs" />
     <Compile Include="Assets\Script\Match\FallTile.cs" />
+    <Compile Include="Assets\Script\Score\GameOverSystem.cs" />
+    <Compile Include="Assets\Script\Score\IDetectGameOver.cs" />
     <Compile Include="Assets\Script\Match\MatchType.cs" />
     <Compile Include="Assets\Script\Scope\Loader.cs" />
+    <Compile Include="Assets\Script\Score\MaxCountService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />

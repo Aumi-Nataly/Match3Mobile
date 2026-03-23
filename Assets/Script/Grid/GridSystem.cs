@@ -23,6 +23,7 @@ public class GridSystem : MonoBehaviour
 
     public event Action<MatchType> OnScoreAdded;
     private bool StartingCombination = true;
+    private bool _isProcessing;
 
     [Inject]
     public void Construct(TileSpriteManager tileSpriteManager, Pool pool,
@@ -108,6 +109,7 @@ public class GridSystem : MonoBehaviour
 
     private IEnumerator ProcessMatches(bool startingCombination)
     {
+        _isProcessing = true;
         int step = 0;
 
         while (step < 100) // Защита от бесконечного цикла
@@ -122,7 +124,6 @@ public class GridSystem : MonoBehaviour
                 break;
             }
 
-            Debug.Log($"Шаг {step}: найдено комбинаций {foundList.Count}");
 
             // 2. Удалить комбинации
             foreach (var found in foundList)
@@ -150,8 +151,7 @@ public class GridSystem : MonoBehaviour
             step++;
 
         }
-
-        Debug.Log($"Всего выполнено шагов: {step}");
+        _isProcessing = false;
     }
 
 
@@ -186,12 +186,14 @@ public class GridSystem : MonoBehaviour
     {
         GenerateGrid();
         StartCoroutine(ProcessMatches(StartingCombination));
-      //  StartCoroutine(ProcessMatches(StartingCombination));
         StartingCombination = false;
     }
 
     private void HandleSwipe(SwipeModel swipeModel)
     {
+        if (_isProcessing) //защита от пользовательского ввода
+            return;
+
         Vector2Int poscurrent = FindTilePosition(swipeModel.Tile);
         Vector2Int targetPos = poscurrent + new Vector2Int((int)swipeModel.Vect2.x, (int)swipeModel.Vect2.y);
 

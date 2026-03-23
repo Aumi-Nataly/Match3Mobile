@@ -60,7 +60,6 @@ public class SwipeDetection : MonoBehaviour
         if (direction != Vector2.zero)
         {
             OnSwipe?.Invoke(new SwipeModel {Tile = selectedTile, Vect2 = direction });
-            Debug.Log("Swipe: " + direction);
         }
 
         selectedTile = null;
