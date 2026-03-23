@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using VContainer;
 
 public class GameOverSystem : MonoBehaviour
@@ -10,6 +11,8 @@ public class GameOverSystem : MonoBehaviour
     [SerializeField]
     private TMP_Text txtTaskValue;
 
+    [SerializeField]
+    private GameObject GameOverPanel;
 
     private IDetectGameOver _detectGame;
     private GridSystem _gridSystem;
@@ -55,5 +58,14 @@ public class GameOverSystem : MonoBehaviour
     private void GameOver()
     {
         Debug.Log("Игра окончена");
+        Time.timeScale = 0f;
+        GameOverPanel.SetActive(true);
+    }
+
+    public void ReloadLevel()
+    {
+        Time.timeScale = 1f;
+        _gridSystem.ClearGrid();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

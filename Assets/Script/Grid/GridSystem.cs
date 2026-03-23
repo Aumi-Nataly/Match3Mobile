@@ -107,6 +107,21 @@ public class GridSystem : MonoBehaviour
         }
     }
 
+    public void ClearGrid()
+    {
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                if (_grid[x, y] != null)
+                {
+                    _pool.ReturnToPool(_grid[x, y]);
+                    _grid[x, y] = null;
+                }
+            }
+        }
+    }
+
     private IEnumerator ProcessMatches(bool startingCombination)
     {
         _isProcessing = true;

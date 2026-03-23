@@ -1,31 +1,34 @@
 using System;
-
+using System.Diagnostics;
+using UnityEngine;
 
 public class MaxCountService : IDetectGameOver
 {
     public event Action OnGameOver;
 
     private GridSystem _gridSystem;
-    private int _maxCount;
-    private int _currentCount;
+    private int _maxCount = 100;
+    private int _currentCount = 0;
 
     public MaxCountService(GridSystem gridSystem)
     {
         _maxCount = UnityEngine.Random.Range(100, 200) * 10;
         _gridSystem = gridSystem;
 
-        _gridSystem.OnScoreAdded += AddScore;
+        _gridSystem.OnScoreAdded += AddScore; 
     }
 
     private void AddScore(MatchType matchType)
     {
+        UnityEngine.Debug.Log($"MatchType {matchType.ToString()}");
+
         switch (matchType)
         {
             case MatchType.Three:
-                _maxCount += 10;
+                _currentCount += 10;
                 break;
             case MatchType.Four:
-                _maxCount += 20;
+                _currentCount += 20;
                 break;
             case MatchType.Five:
                 _currentCount += 50;
@@ -37,6 +40,8 @@ public class MaxCountService : IDetectGameOver
                 _currentCount += 300;
                 break;
         }
+
+        UnityEngine.Debug.Log($"_currentCount {_currentCount}");
 
         if (_currentCount >= _maxCount)
         {
