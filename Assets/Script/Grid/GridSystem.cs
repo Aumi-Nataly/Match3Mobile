@@ -59,6 +59,23 @@ public class GridSystem : MonoBehaviour
         SeeStartGrid();
     }
 
+    public void Mix()
+    {
+        Debug.Log("Mix");
+
+        for (int x = 0; x < Width; x++)
+        {
+            for (int y = 0; y < Height; y++)
+            {
+                 _pool.ReturnToPool(_grid[x, y]);
+                _grid[x, y] = null;
+               
+            }
+        }
+
+        SeeStartGrid();
+    }
+
     private void GenerateGrid()
     {
         _grid = new Tile[Width, Height];
