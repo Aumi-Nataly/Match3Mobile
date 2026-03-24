@@ -5,7 +5,7 @@ using UnityEngine;
 public class MaxCountService : IDetectGameOver
 {
     public event Action OnGameOver;
-
+    public event Action<int> OnCount;
     private GridSystem _gridSystem;
     private int _maxCount = 100;
     private int _currentCount = 0;

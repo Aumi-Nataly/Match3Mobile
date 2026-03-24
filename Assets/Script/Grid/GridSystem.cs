@@ -22,6 +22,7 @@ public class GridSystem : MonoBehaviour
     private SwipeDetection _swipeDetection;
 
     public event Action<MatchType> OnScoreAdded;
+    public event Action<List<Tile>> OnDeletedTile;
     private bool StartingCombination = true;
     private bool _isProcessing;
 
@@ -50,6 +51,8 @@ public class GridSystem : MonoBehaviour
     private void Start()
     {
         Width = UnityEngine.Random.Range(4, 8);
+
+        _pool.ReloadPool();
 
          SetupCamera();
         _swipeDetection.OnSwipe += HandleSwipe;
@@ -112,21 +115,6 @@ public class GridSystem : MonoBehaviour
         }
     }
 
-    public void ClearGrid()
-    {
-        for (int x = 0; x < Width; x++)
-        {
-            for (int y = 0; y < Height; y++)
-            {
-                if (_grid[x, y] != null)
-                {
-                    _pool.ReturnToPool(_grid[x, y]);
-                    _grid[x, y] = null;
-                }
-            }
-        }
-    }
-
     private IEnumerator ProcessMatches(bool startingCombination)
     {
         _isProcessing = true;
@@ -151,7 +139,10 @@ public class GridSystem : MonoBehaviour
                 RemoveTile(found.ListTile);
 
                 if (!startingCombination)
+                { 
                     OnScoreAdded?.Invoke(found.MatchType);
+                    OnDeletedTile?.Invoke(found.ListTile);
+                }
             }
 
             yield return new WaitForSeconds(0.3f);

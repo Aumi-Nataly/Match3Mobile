@@ -16,6 +16,11 @@ public class Pool : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(gameObject);
+    }
+
+    public void ReloadPool()
+    {
+        pool.Clear();
         CreatePool(Prefab, Size);
     }
 
@@ -25,7 +30,7 @@ public class Pool : MonoBehaviour
         for (int i = 0; i < size; i++)
         {
             Tile tileObject = Instantiate(prefab);
-            DontDestroyOnLoad(tileObject);
+            SceneManager.MoveGameObjectToScene(tileObject.gameObject, SceneManager.GetActiveScene());
             tileObject.gameObject.SetActive(false);
             pool.Enqueue(tileObject);
         }

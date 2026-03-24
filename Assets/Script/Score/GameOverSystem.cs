@@ -31,6 +31,7 @@ public class GameOverSystem : MonoBehaviour
     {
         SelectTypeGame(); 
         _detectGame.OnGameOver += GameOver;
+        _detectGame.OnCount += ChangeCount;
 
         var desc = _detectGame.Description();
         txtTaskName.text = desc.TaskName;
@@ -46,6 +47,7 @@ public class GameOverSystem : MonoBehaviour
     private void OnDestroy()
     {
         _detectGame.OnGameOver -= GameOver;
+        _detectGame.OnCount -= ChangeCount;
     }
 
     private void SelectTypeGame()
@@ -74,10 +76,14 @@ public class GameOverSystem : MonoBehaviour
         GameOverPanel.SetActive(true);
     }
 
+    private void ChangeCount(int count)
+    {
+        txtTaskValue.text = count.ToString();
+    }
+
     public void ReloadLevel()
     {
         Time.timeScale = 1f;
-        _gridSystem.ClearGrid();
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

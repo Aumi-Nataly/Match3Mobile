@@ -5,6 +5,7 @@ using UnityEngine;
 public class GetColorService : IDetectGameOver
 {
     public event Action OnGameOver;
+    public event Action<int> OnCount;
     private GridSystem _gridSystem;
     private int _maxCount = 0;
     private Sprite _sprite;
@@ -15,7 +16,29 @@ public class GetColorService : IDetectGameOver
         _maxCount = UnityEngine.Random.Range(20, 30);
         _gridSystem = gridSystem;
         SetSprite();
+
+        _gridSystem.OnDeletedTile += DeletedTile;
     }
+
+    private void DeletedTile(List<Tile> tiles)
+    {
+        foreach (Tile tile in tiles) 
+        {
+            if (tile.Type == _tileType) 
+            {
+                _maxCount--;
+            }
+        }
+
+        OnCount?.Invoke(_maxCount);
+
+        if (_maxCount <= 0)
+        {
+            OnGameOver?.Invoke();
+            _gridSystem.OnDeletedTile -= DeletedTile;
+        }
+    }
+
 
     public TaskModel Description()
     {
