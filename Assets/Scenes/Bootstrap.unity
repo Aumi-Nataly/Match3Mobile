@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2d365be5314c7d44b79e284eda12eb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pool
-  Size: 80
+  Size: 150
   Prefab: {fileID: 7632490488822170865, guid: db875e902d57dad468ad4dbe89e4fabe, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

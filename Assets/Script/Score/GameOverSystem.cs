@@ -52,11 +52,8 @@ public class GameOverSystem : MonoBehaviour
 
     private void SelectTypeGame()
     {
-        //  GameOverType randomType = (GameOverType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(GameOverType)).Length);
-
-        GameOverType randomType = GameOverType.GetColor;
-
-
+        GameOverType randomType = (GameOverType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(GameOverType)).Length);
+  
         switch (randomType)
         {
             case GameOverType.MaxCount:
@@ -85,5 +82,10 @@ public class GameOverSystem : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void GotToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
     }
 }

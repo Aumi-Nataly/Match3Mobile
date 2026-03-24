@@ -54,6 +54,7 @@
     <Compile Include="Assets\Script\Match\MatchFinder.cs" />
     <Compile Include="Assets\Script\Swipe\SwipeModel.cs" />
     <Compile Include="Assets\Script\Score\GetColorService.cs" />
+    <Compile Include="Assets\Script\MenuManager.cs" />
     <Compile Include="Assets\Script\Match\IFallTile.cs" />
     <Compile Include="Assets\Script\Score\ScoreSystem.cs" />
     <Compile Include="Assets\Script\Score\GameOverType.cs" />

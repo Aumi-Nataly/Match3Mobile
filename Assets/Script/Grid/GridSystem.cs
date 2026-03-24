@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using VContainer;
 public class GridSystem : MonoBehaviour
 {
@@ -50,7 +51,7 @@ public class GridSystem : MonoBehaviour
 
     private void Start()
     {
-        Width = UnityEngine.Random.Range(4, 8);
+        Width = UnityEngine.Random.Range(4, 7);
 
         _pool.ReloadPool();
 
@@ -317,7 +318,10 @@ public class GridSystem : MonoBehaviour
         Debug.Log($"SetupCamera Height ={Height}");
 
     }
- 
-  
+
+    public void GotToMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
 }
 
