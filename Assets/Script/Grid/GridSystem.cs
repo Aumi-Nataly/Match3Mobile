@@ -20,7 +20,8 @@ public class GridSystem : MonoBehaviour
     private Pool _pool;
     private IMatchFinder _matchFinder;
     private IFallTile _fallTile;
-    private SwipeDetection _swipeDetection;
+    private SwipeDetection _swipeDetection; 
+    private AudioManager _audio;
 
     public event Action<MatchType> OnScoreAdded;
     public event Action<List<Tile>> OnDeletedTile;
@@ -29,19 +30,22 @@ public class GridSystem : MonoBehaviour
 
     [Inject]
     public void Construct(TileSpriteManager tileSpriteManager, Pool pool,
-        IMatchFinder matchFinder, IFallTile fallTile, SwipeDetection swipeDetection)
+        IMatchFinder matchFinder, IFallTile fallTile, SwipeDetection swipeDetection
+        ,AudioManager audio)
     {
         _tileSpriteManager = tileSpriteManager;
         _pool = pool;
         _matchFinder = matchFinder;
         _fallTile = fallTile;
         _swipeDetection = swipeDetection;
+        _audio = audio;
 
         Debug.Log($"GridSystem - TileSpriteManager = {tileSpriteManager != null}");
         Debug.Log($"GridSystem - Pool = {pool != null}");
         Debug.Log($"GridSystem - MatchFinder = {matchFinder != null}");
         Debug.Log($"GridSystem - FallTile = {fallTile != null}");
         Debug.Log($"GridSystem - SwipeDetection = {swipeDetection != null}");
+        Debug.Log($"GridSystem - AudioManager = {audio != null}");
     }
 
     private void OnDestroy()
@@ -155,6 +159,7 @@ public class GridSystem : MonoBehaviour
             foreach (var found in foundList)
             {
                 RemoveTile(found.ListTile);
+                _audio.PlayRemoveSound();
 
                 if (!startingCombination)
                 { 

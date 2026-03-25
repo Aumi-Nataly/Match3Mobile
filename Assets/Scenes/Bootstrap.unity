@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 1223330278}
   - component: {fileID: 1223330279}
   - component: {fileID: 1223330280}
+  - component: {fileID: 1223330281}
   m_Layer: 0
   m_Name: LifetimeScope
   m_TagString: Untagged
@@ -213,6 +214,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Pool
   Size: 150
   Prefab: {fileID: 7632490488822170865, guid: db875e902d57dad468ad4dbe89e4fabe, type: 3}
+--- !u!114 &1223330281
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1223330275}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f46f5c93aef4c9b44aabb1faa2ab9be9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  removeSoundClip: {fileID: 8300000, guid: 34bacc1f6084faa4aa8f3f3a8aa0bcae, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

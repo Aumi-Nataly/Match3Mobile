@@ -7,5 +7,6 @@ public class GameLifetimeScope : LifetimeScope
     {
         builder.RegisterComponentInHierarchy<TileSpriteManager>();
         builder.RegisterComponentInHierarchy<Pool>();
+        builder.RegisterComponentInHierarchy<AudioManager>();
     }
 }

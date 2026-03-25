@@ -22,7 +22,6 @@ public class FallTile : IFallTile
                                 grid[x, a] = null;
 
                              t.MoveTo(GetWorldPosition(wight, height, x, y, cellSize));
-                           // t.transform.localPosition = GetWorldPosition(wight, height, x, y, cellSize);
 
                             break;
 
