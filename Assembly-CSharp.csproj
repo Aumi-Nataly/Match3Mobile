@@ -59,6 +59,7 @@
     <Compile Include="Assets\Script\Match\IFallTile.cs" />
     <Compile Include="Assets\Script\Score\ScoreSystem.cs" />
     <Compile Include="Assets\Script\Score\GameOverType.cs" />
+    <Compile Include="Assets\Script\Tiles\TileKind.cs" />
     <Compile Include="Assets\Script\Swipe\InputService.cs" />
     <Compile Include="Assets\Script\Scope\LevelLifetimeScope.cs" />
     <Compile Include="Assets\Script\Match\MatchModel.cs" />

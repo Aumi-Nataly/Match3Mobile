@@ -5,6 +5,7 @@ using VContainer;
 public class Tile : MonoBehaviour
 {
     public TileType Type;
+    public TileKind TileKind;
     public SpriteRenderer spriteRenderer;
 
     private void Awake()
@@ -23,10 +24,13 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void SetType(TileType newType, TileSpriteManager _tileSpriteManager)
+    public void SetType(/*TileType newType,*/ TileSpriteManager _tileSpriteManager)
     {
         EnsureComponent();
+        TileType newType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length - 1);
+
         Type = newType;
+        TileKind = TileKind.Normal;
         Sprite newSprite = _tileSpriteManager.GetSprite(Type);
         spriteRenderer.sprite = newSprite;
     }
@@ -35,4 +39,17 @@ public class Tile : MonoBehaviour
     {
         transform.DOLocalMove(tatgetPos, duration).SetEase(Ease.Linear);
     }
+
+    public void SetKind(TileKind kind)
+    {
+        TileKind = kind;
+    }
+
+    public void SetColorBomb(TileSpriteManager _tileSpriteManager)
+    {
+        spriteRenderer.sprite = _tileSpriteManager.GetSpriteBomb();
+        Type = TileType.Nothing;
+    }
+
+  
 }

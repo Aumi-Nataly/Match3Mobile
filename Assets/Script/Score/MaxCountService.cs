@@ -20,8 +20,6 @@ public class MaxCountService : IDetectGameOver
 
     private void AddScore(MatchType matchType)
     {
-        UnityEngine.Debug.Log($"MatchType {matchType.ToString()}");
-
         switch (matchType)
         {
             case MatchType.Three:
@@ -41,7 +39,6 @@ public class MaxCountService : IDetectGameOver
                 break;
         }
 
-        UnityEngine.Debug.Log($"_currentCount {_currentCount}");
 
         if (_currentCount >= _maxCount)
         {

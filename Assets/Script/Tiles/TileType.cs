@@ -5,5 +5,6 @@ public enum TileType
    One,
    Two,
    Three,
-   Four
+   Four,
+   Nothing
 }

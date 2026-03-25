@@ -157,6 +157,7 @@ MonoBehaviour:
   - {fileID: 2431843633963688315, guid: e4b269c993173334dbefeb1330e4178a, type: 3}
   - {fileID: 4643141583821273657, guid: d143684a6619fe34caaaa3c4073b2f69, type: 3}
   - {fileID: -6602810111827019907, guid: 63d502f47a0f6914899f16395191f332, type: 3}
+  SpriteBomb: {fileID: -1483665779731714255, guid: 3bf692a8150a16947afb84212a50e2d6, type: 3}
 --- !u!4 &1223330277
 Transform:
   m_ObjectHideFlags: 0

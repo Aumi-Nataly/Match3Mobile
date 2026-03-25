@@ -66,7 +66,6 @@ public class GridSystem : MonoBehaviour
 
     public void Mix()
     {
-        Debug.Log("Mix");
 
         for (int x = 0; x < Width; x++)
         {
@@ -109,8 +108,8 @@ public class GridSystem : MonoBehaviour
         tile.transform.SetParent(transform);
         tile.transform.localPosition = GetWorldPosition(x, y);
 
-        TileType randomType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
-        tile.SetType(randomType, _tileSpriteManager);
+        //TileType randomType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
+        tile.SetType( _tileSpriteManager);
 
         _grid[x, y] = tile;
     }
@@ -127,15 +126,76 @@ public class GridSystem : MonoBehaviour
     {
         foreach (Tile tile in tiles)
         {
+
             Vector2Int pos = FindTilePosition(tile);
 
             if (pos.x < 0)
                 return;
 
+            if (tile.TileKind == TileKind.Bomb)
+            {
+                  continue;
+            }
+
             _grid[pos.x, pos.y] = null;
+            tile.SetType(_tileSpriteManager);
             _pool.ReturnToPool(tile);
+            
         }
     }
+
+    private IEnumerator Explode(Tile bomb)
+    {
+        if (bomb.TileKind == TileKind.Bomb)
+        {
+            var l = new List<Tile>();
+
+            Vector2Int pos = FindTilePosition(bomb);
+
+
+
+            for (int dx = -1; dx <= 1; dx++)
+            {
+                for (int dy = -1; dy <= 1; dy++)
+                {
+                    int x = pos.x + dx;
+                    int y = pos.y + dy;
+
+                    if (x >= 0 && x < Width && y >= 0 && y < Height)
+                    {
+                        Tile t = _grid[x, y];
+
+                        if (t != null && t != bomb)
+                        {
+                            l.Add(t);
+                        }
+                    }
+                }
+            }
+
+            RemoveTile(l);
+
+            bomb.SetType(_tileSpriteManager);
+            _pool.ReturnToPool(bomb);
+            _grid[pos.x, pos.y] = null;
+
+
+            // 3. Сдвинуть вниз на пустые места
+            _fallTile.FallDownTile(_grid, Width, Height, CellSize);
+
+            // Ждём завершения анимации падения
+            yield return new WaitForSeconds(0.5f);
+
+            // 4. Создать новые ячейки на пустом месте
+            SpawnNewTile();
+
+            // Ждём завершения анимации создания новых тайлов
+             yield return new WaitForSeconds(2f);
+
+            ProcessMatches(false);
+        }
+    }
+
 
     private IEnumerator ProcessMatches(bool startingCombination)
     {
@@ -150,7 +210,6 @@ public class GridSystem : MonoBehaviour
             // Если комбинаций нет — завершаем обработку
             if (foundList.Count == 0)
             {
-                Debug.Log($"Обработка завершена на шаге {step}. Больше комбинаций нет.");
                 break;
             }
 
@@ -158,6 +217,11 @@ public class GridSystem : MonoBehaviour
             // 2. Удалить комбинации
             foreach (var found in foundList)
             {
+                if (found.MatchType == MatchType.Four || found.MatchType == MatchType.Five)
+                {
+                     CreateBomb(found);
+                }
+
                 RemoveTile(found.ListTile);
                 _audio.PlayRemoveSound();
 
@@ -186,6 +250,18 @@ public class GridSystem : MonoBehaviour
 
         }
         _isProcessing = false;
+    }
+
+
+    private void CreateBomb(MatchModel match)
+    {
+        if (match.ListTile.Count == 0)
+            return;
+
+        Tile tile = match.ListTile[0];
+        tile.SetKind(TileKind.Bomb);
+        tile.SetColorBomb(_tileSpriteManager);
+
     }
 
 
@@ -237,10 +313,12 @@ public class GridSystem : MonoBehaviour
         Tile other = _grid[targetPos.x, targetPos.y];
         SwapTiles(swipeModel.Tile, other);
 
+
         var foundList = _matchFinder.FindMatches(_grid, Width, Height);
 
-        if (foundList.Count > 0)
+        if (foundList.Count > 0 || swipeModel.Tile.TileKind == TileKind.Bomb)
         {
+            StartCoroutine(Explode(swipeModel.Tile));
             StartCoroutine(ProcessMatches(StartingCombination));
         }
         else
@@ -278,8 +356,7 @@ public class GridSystem : MonoBehaviour
         tile.transform.SetParent(transform, worldPositionStays: true);
         tile.transform.localPosition = GetWorldPosition(x, Height);
 
-        TileType randomType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
-        tile.SetType(randomType, _tileSpriteManager);
+        tile.SetType( _tileSpriteManager);
     
         tile.MoveTo(GetWorldPosition(x, y));
          _grid[x, y] = tile;
