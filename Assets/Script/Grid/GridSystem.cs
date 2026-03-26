@@ -57,7 +57,7 @@ public class GridSystem : MonoBehaviour
     {
         Width = UnityEngine.Random.Range(4, 7);
 
-        _pool.ReloadPool();
+     //   _pool.ReloadPool();
 
          SetupCamera();
         _swipeDetection.OnSwipe += HandleSwipe;
@@ -108,7 +108,6 @@ public class GridSystem : MonoBehaviour
         tile.transform.SetParent(transform);
         tile.transform.localPosition = GetWorldPosition(x, y);
 
-        //TileType randomType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length);
         tile.SetType( _tileSpriteManager);
 
         _grid[x, y] = tile;
@@ -148,6 +147,7 @@ public class GridSystem : MonoBehaviour
     {
         if (bomb.TileKind == TileKind.Bomb)
         {
+            _isProcessing = true;
             var l = new List<Tile>();
 
             Vector2Int pos = FindTilePosition(bomb);
@@ -184,7 +184,7 @@ public class GridSystem : MonoBehaviour
             _fallTile.FallDownTile(_grid, Width, Height, CellSize);
 
             // Ждём завершения анимации падения
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
 
             // 4. Создать новые ячейки на пустом месте
             SpawnNewTile();
@@ -192,7 +192,9 @@ public class GridSystem : MonoBehaviour
             // Ждём завершения анимации создания новых тайлов
              yield return new WaitForSeconds(2f);
 
-            ProcessMatches(false);
+            StartCoroutine(ProcessMatches(false));
+
+            _isProcessing = false;
         }
     }
 
@@ -232,19 +234,19 @@ public class GridSystem : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(0.3f);
+            yield return new WaitForSeconds(0.2f);
 
             // 3. Сдвинуть вниз на пустые места
             _fallTile.FallDownTile(_grid, Width, Height, CellSize);
 
             // Ждём завершения анимации падения
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.3f);
 
             // 4. Создать новые ячейки на пустом месте
             SpawnNewTile();
 
             // Ждём завершения анимации создания новых тайлов
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(0.5f);
 
             step++;
 
@@ -361,7 +363,7 @@ public class GridSystem : MonoBehaviour
         tile.MoveTo(GetWorldPosition(x, y));
          _grid[x, y] = tile;
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(0.5f);
     }
 
     private Vector2Int FindTilePosition(Tile tile)

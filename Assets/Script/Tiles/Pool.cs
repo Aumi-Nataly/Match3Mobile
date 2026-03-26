@@ -15,14 +15,9 @@ public class Pool : MonoBehaviour
 
     private void Awake()
     {
-        DontDestroyOnLoad(gameObject);
-    }
-
-    public void ReloadPool()
-    {
-        pool.Clear();
         CreatePool(Prefab, Size);
     }
+
 
     private void CreatePool(Tile prefab, int size)
     {

@@ -5,8 +5,7 @@ public class GameLifetimeScope : LifetimeScope
 {
     protected override void Configure(IContainerBuilder builder)
     {
-        builder.RegisterComponentInHierarchy<TileSpriteManager>();
-        builder.RegisterComponentInHierarchy<Pool>();
+        builder.RegisterComponentInHierarchy<TileSpriteManager>(); 
         builder.RegisterComponentInHierarchy<AudioManager>();
     }
 }

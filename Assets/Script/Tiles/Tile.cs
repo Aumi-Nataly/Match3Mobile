@@ -24,7 +24,7 @@ public class Tile : MonoBehaviour
         }
     }
 
-    public void SetType(/*TileType newType,*/ TileSpriteManager _tileSpriteManager)
+    public void SetType(TileSpriteManager _tileSpriteManager)
     {
         EnsureComponent();
         TileType newType = (TileType)UnityEngine.Random.Range(0, System.Enum.GetValues(typeof(TileType)).Length - 1);
@@ -35,7 +35,7 @@ public class Tile : MonoBehaviour
         spriteRenderer.sprite = newSprite;
     }
 
-    public void MoveTo(Vector3 tatgetPos, float duration = 0.3f)
+    public void MoveTo(Vector3 tatgetPos, float duration = 0.1f)
     {
         transform.DOLocalMove(tatgetPos, duration).SetEase(Ease.Linear);
     }

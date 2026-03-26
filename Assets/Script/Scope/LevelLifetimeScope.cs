@@ -13,5 +13,6 @@ public class LevelLifetimeScope : LifetimeScope
         builder.RegisterComponentInHierarchy<SwipeDetection>();
         builder.RegisterComponentInHierarchy<ScoreSystem>();
         builder.RegisterComponentInHierarchy<GameOverSystem>();
+        builder.RegisterComponentInHierarchy<Pool>();
     }
 }
