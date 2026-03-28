@@ -57,8 +57,6 @@ public class GridSystem : MonoBehaviour
     {
         Width = UnityEngine.Random.Range(4, 7);
 
-     //   _pool.ReloadPool();
-
          SetupCamera();
         _swipeDetection.OnSwipe += HandleSwipe;
         SeeStartGrid();
@@ -103,7 +101,10 @@ public class GridSystem : MonoBehaviour
         Tile tile = _pool.GetFromPool();
 
         if (tile == null)
+        {
+            Debug.Log("Не удалось взять из пула");
             return;
+        }
 
         tile.transform.SetParent(transform);
         tile.transform.localPosition = GetWorldPosition(x, y);
@@ -168,12 +169,14 @@ public class GridSystem : MonoBehaviour
                         if (t != null && t != bomb)
                         {
                             l.Add(t);
+                            
                         }
                     }
                 }
             }
 
             RemoveTile(l);
+            OnDeletedTile?.Invoke(l);
 
             bomb.SetType(_tileSpriteManager);
             _pool.ReturnToPool(bomb);
@@ -190,7 +193,7 @@ public class GridSystem : MonoBehaviour
             SpawnNewTile();
 
             // Ждём завершения анимации создания новых тайлов
-             yield return new WaitForSeconds(2f);
+             yield return new WaitForSeconds(1.5f);
 
             StartCoroutine(ProcessMatches(false));
 
@@ -246,7 +249,7 @@ public class GridSystem : MonoBehaviour
             SpawnNewTile();
 
             // Ждём завершения анимации создания новых тайлов
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1.5f);
 
             step++;
 

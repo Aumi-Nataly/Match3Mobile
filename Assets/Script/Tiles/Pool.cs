@@ -16,6 +16,7 @@ public class Pool : MonoBehaviour
     private void Awake()
     {
         CreatePool(Prefab, Size);
+        Debug.Log("Pool Awake");
     }
 
 
