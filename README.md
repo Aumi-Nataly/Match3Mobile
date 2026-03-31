@@ -21,6 +21,10 @@
 - В результате было сжало аудио и оптимизированы текстуры;
 - Память снижена до ~350 MB на устройстве.
 
+⚙️ Среды разработки:
+- Visual studio 2026
+- Unity 6000.3.10f
+
 - <img width="806" height="626" alt="1 memory" src="https://github.com/user-attachments/assets/9018ec4e-e10e-494b-adf5-ad7eee3b1303" />
 <img width="191" height="343" alt="menu" src="https://github.com/user-attachments/assets/9b6ac582-3469-469d-ac71-b5794ac9438b" />
 <img width="194" height="344" alt="play1" src="https://github.com/user-attachments/assets/48412bc7-b5cb-4ef8-9843-37a354d3de6f" />
